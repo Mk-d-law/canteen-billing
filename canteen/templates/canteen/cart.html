@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cart</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.item.name }}</td>
+                        <td>${{ item.item.price }}</td>
+                        <td>
+                            <form action="{% url 'update_cart' %}" method="post">
+                                {% csrf_token %}
+                                <input type="number" name="{{ item.item.id }}" value="{{ item.quantity }}" min="1" max="10">
+                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                            </form>
+                        </td>
+                        <td>${{ item.item.price|mul:item.quantity }}</td>
+                        <td>
+                            <a href="{% url 'remove_from_cart' item.item.id %}" class="btn btn-sm btn-danger">Remove</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Total Price: ${{ total_price }}</p>
+    </div>
+</body>
+</html>
